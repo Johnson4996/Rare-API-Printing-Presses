@@ -1,0 +1,9 @@
+[
+    {
+        "model": "rareapi.Tag",
+        "pk": 1,
+        "fields": {
+            "label": "Banjo"
+        }
+    }
+]

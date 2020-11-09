@@ -1,0 +1,9 @@
+[
+    {
+        "model": "rareapi.Category",
+        "pk": 1,
+        "fields": {
+            "label": "Music"
+        }
+    }
+]

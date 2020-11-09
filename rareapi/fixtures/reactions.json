@@ -1,0 +1,10 @@
+[
+    {
+        "model": "rareapi.Reaction",
+        "pk": 1,
+        "fields": {
+            "label": "musico",
+            "image_url": ""
+        }
+    }
+]

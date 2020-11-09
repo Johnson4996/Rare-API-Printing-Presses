@@ -1,0 +1,11 @@
+[
+    {
+        "model": "rareapi.Demotion",
+        "pk": 1,
+        "fields": {
+            "action": "BAN",
+            "admin": 1,
+            "approver_one": 1
+        }
+    }
+]

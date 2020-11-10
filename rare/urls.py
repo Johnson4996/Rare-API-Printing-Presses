@@ -16,15 +16,17 @@ Including another URLconf
 from rareapi.models.posts import Posts
 from django.conf.urls import include
 from django.db import router
-from django.urls import path
+from django.urls import path, urls
 from rareapi.views import register_user, login_user
-from rareapi.views import posts
+from rest_framework import routers
+
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'posts', Posts, 'post')
 
 urlpatterns = [
+    path('', include(router.urls)),
     path('register', register_user),
     path('login', login_user),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
-router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'posts', Posts, 'post')

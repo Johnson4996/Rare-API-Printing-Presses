@@ -3,8 +3,8 @@
         "model": "rareapi.Subscriptions",
         "pk": 1,
         "fields": {
-            "created_on": "2020-07-07 12:00:00",
-            "ended_on": "2020-07-07 12:00:01",
+            "created_on": "2020-07-07",
+            "ended_on": "2020-07-07",
             "follower_id": 1,
             "author_id": 1
         }

@@ -104,4 +104,45 @@ class Post(ViewSet):
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single post
+
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            post = Posts.objects.get(pk=pk)
+            post.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Posts.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def list(self, request):
+        """Handle Get request to posts resource
+
+        Returns:
+            Response -- JSON serialized list of posts
+        """
+        # Get all post records from the database
+        post = Posts.objects.all()
+
+        # Support filtering posts by category
+        # http://localhost:8000/posts?type=1
+        #
+        # That URL will retrieve all Music Posts
+        category = self.request.query_params.get('type', None) #type may need to change to category
+        if category is not None:
+            post = post.filter(category_id=category)
+
+        serializer = PostSerializer(
+            post, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+
     

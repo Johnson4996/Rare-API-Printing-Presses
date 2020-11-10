@@ -143,6 +143,19 @@ class Post(ViewSet):
             post, many=True, context={'request': request})
         return Response(serializer.data)
 
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for games
 
+    Arguments:
+        serializer type
+    """
+    class Meta:
+        model = Posts
+        url = serializers.HyperlinkedIdentityField(
+            view_name='post',
+            lookup_field='id'
+        )
+        fields =('id', 'category', 'title', 'publication_date', 'image_url', 'content', 'approved')
+        depth = 1
 
     

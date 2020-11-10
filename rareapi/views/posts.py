@@ -65,7 +65,7 @@ class Post(ViewSet):
         try:
             # pk is a parameter to this function, and 
             # Django parses it from the URL rouote parameter
-            # http://localhose:8000/posts/2
+            # http://localhost:8000/posts/2
             #
             # The `2` at the end of the route becomes `pk`
 
@@ -74,3 +74,34 @@ class Post(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    def update(self, request, pk=None):
+        """Handle PUT requests for a Post
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+
+        rareUser = RareUser.objects.get(user=request.auth.user)
+
+        # Do mostly the same thing as POST, but instead of 
+        # creating a new instance of Post, get the post record
+        # from the database whose primary key is `pk`
+        post = Posts()
+        post.title = request.data['title']
+        post.publication_date = request.data['date']
+        post.image_url = request.data['imageUrl']
+        post.content = request.data['content']
+        post.approved = request.data['approved'] # will need help getting this right
+        post.rare_user = rareUser
+
+        postcategory = Category.objects.get(pk=request.data["category_id"])
+        post.category = postcategory
+        post.save()
+
+        # 204 status code means everything worked by the
+        # server is not sending back any data in the response
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    

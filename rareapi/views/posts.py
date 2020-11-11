@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Category, Posts, RareUser
-from .categories import CategorySerializer
+from django.contrib.auth.models import User
 
 class Post(ViewSet):
     """Rare Posts"""
@@ -69,7 +69,6 @@ class Post(ViewSet):
             # http://localhost:8000/posts/2
             #
             # The `2` at the end of the route becomes `pk`
-            # If you are getting a -detail error, check your retrieve
 
             post = Posts.objects.get(pk=pk)
             serializer = PostSerializer(post, context={'request': request})
@@ -133,11 +132,13 @@ class Post(ViewSet):
         # Get all post records from the database
         post = Posts.objects.all()
 
-        # Support filtering posts by user_id
-        # http://localhost:8000/posts?label=1
-        #
+        user_id = self.request.query_params.get('user_id', None)
+        if user_id is not None:
+            posts = post.filter(user_id=user_id)
+        # Support filtering posts by category
+        # http://localhost:8000/posts?type=1
         # That URL will retrieve all Music Posts
-        # category = self.request.query_params.get('label', None)
+        # category = self.request.query_params.get('type', None) #type may need to change to category
         # if category is not None:
         #     post = post.filter(category_id=category)
 
@@ -145,20 +146,32 @@ class Post(ViewSet):
             post, many=True, context={'request': request})
         return Response(serializer.data)
 
-class PostSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    """JSON serializer for gamer's related Django user"""
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
+class PostUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for gamers"""
+
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = RareUser
+        fields = ('user', )
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for games
 
     Arguments:
         serializer type
     """
+    rare_user = PostUserSerializer(many=False)
+    
     class Meta:
-        category = CategorySerializer(many=False)
         model = Posts
-        url = serializers.HyperlinkedIdentityField(
-            view_name='posts',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'category', 'title', 'publication_date', 'image_url', 'content', 'approved')
+        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved')
         depth = 1
 
     

@@ -89,7 +89,7 @@ class Comments(ViewSet):
         comment.created_on = request.data["created_on"]
         post = Posts.objects.get(pk=request.data["postId"])
         comment.post = post
-        comment.author = author
+        comment.author = author 
 
         comment.save()
 

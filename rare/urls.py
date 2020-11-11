@@ -13,15 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from rareapi.models.posts import Posts
 from django.conf.urls import include
-from django.db import router
-from django.urls import path, urls
-from rareapi.views import register_user, login_user
+from django.urls import path
+from rareapi.views import register_user, login_user, Tags
 from rest_framework import routers
+from rareapi.views import Categories, Post
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'posts', Posts, 'post')
+router.register(r'categories', Categories, 'categories')
+router.register(r'posts', Post, 'post')
+router.register(r'tags', Tags, 'tag')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -29,4 +30,3 @@ urlpatterns = [
     path('login', login_user),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
 ]
-

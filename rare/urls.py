@@ -22,7 +22,6 @@ router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'tags', Tags, 'tag')
 router.register(r'categories', Categories, 'categories')
 
-
 urlpatterns = [
     path('register', register_user),
     path('', include(router.urls)),

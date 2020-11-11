@@ -25,8 +25,6 @@ class Comments(ViewSet):
             post = Posts.objects.get(pk=request.data["postId"])
             comment.post = post
             comment.author = author
-
-
         except KeyError as ex:
             return Response({'message': 'Incorrect key was sent in request'}, status=status.HTTP_400_BAD_REQUEST)
 

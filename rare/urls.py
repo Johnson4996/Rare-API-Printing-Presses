@@ -20,8 +20,8 @@ from rest_framework import routers
 from rareapi.views import Categories, Post
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'categories', Categories, 'categories')
-router.register(r'posts', Post, 'post')
+router.register(r'categories', Categories, 'category')
+router.register(r'posts', Post, 'posts')
 router.register(r'tags', Tags, 'tag')
 
 urlpatterns = [

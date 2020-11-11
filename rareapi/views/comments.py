@@ -58,6 +58,23 @@ class Comments(ViewSet):
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single comment
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            comment = CommentsModel.objects.get(pk=pk)
+            comment.delete()
+            #if succesful it will return a status code of 204
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except CommentsModel.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class CommentSerializer(serializers.ModelSerializer):
     """JSON serializer for comment creator"""

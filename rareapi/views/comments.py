@@ -68,12 +68,32 @@ class Comments(ViewSet):
             comment.delete()
             #if succesful it will return a status code of 204
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-
+        #if the object to be deleted doesn't exist status code will be 404
         except CommentsModel.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        """Handle PUT requests for a comments
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        author = RareUser.objects.get(user=request.auth.user)
+
+        comment = CommentsModel.objects.get(pk=pk)
+
+        comment.content = request.data["content"]
+        comment.subject = request.data["subject"]
+        comment.created_on = request.data["created_on"]
+        post = Posts.objects.get(pk=request.data["postId"])
+        comment.post = post
+        comment.author = author
+
+        comment.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentSerializer(serializers.ModelSerializer):

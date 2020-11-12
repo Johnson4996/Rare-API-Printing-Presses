@@ -36,6 +36,25 @@ class Categories(ViewSet):
         serializer = CategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        """Handle Get requests for single category
+
+        Returns:
+            Response -- JSON serialized category instance
+        """
+        try:
+            # pk is a parameter to this function, and
+            # Django parses it from the URL route parameter
+            # http://localhost:8000/categories/2
+            #
+            # The `2` at the end of the route becomes `pk`
+
+            category = Category.objects.get(pk=pk)
+            serializer = CategorySerializer(category, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+            
     def destroy(self, request, pk=None):
         try:
             category = Category.objects.get(pk=pk)
@@ -59,13 +78,14 @@ class Categories(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
+
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for categories"""
 
     class Meta:
         model = Category
         url = serializers.HyperlinkedIdentityField(
-            view_name='category',
+            view_name='categories',
             lookup_field='id'
         )
-        fields = ('id', 'label')
+        fields = ('id', 'url', 'label')

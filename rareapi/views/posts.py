@@ -30,7 +30,7 @@ class Post(ViewSet):
         post = Posts()
         post.title = request.data['title']
         post.publication_date = request.data['date']
-        post.image_url = request.data['imageUrl']
+        post.image_url = request.data['image_url']
         post.content = request.data['content']
         post.approved = request.data['approved'] # will need help getting this right
         post.rare_user = rareUser
@@ -91,7 +91,7 @@ class Post(ViewSet):
         post = Posts()
         post.title = request.data['title']
         post.publication_date = request.data['date']
-        post.image_url = request.data['imageUrl']
+        post.image_url = request.data['image_url']
         post.content = request.data['content']
         post.approved = request.data['approved'] # will need help getting this right
         post.rare_user = rareUser

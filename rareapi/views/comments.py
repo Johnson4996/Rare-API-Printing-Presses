@@ -55,6 +55,15 @@ class Comments(ViewSet):
         """
         comments = CommentsModel.objects.all()
 
+        for comment in comments:
+            comment.IsAuthor = None
+
+            try:
+                RareUser.objects.get(user=request.auth.user, pk=comment.author_id)
+                comment.IsAuthor = True
+            except RareUser.DoesNotExist:
+                comment.IsAuthor = False
+
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
@@ -88,7 +97,7 @@ class Comments(ViewSet):
         comment.content = request.data["content"]
         comment.subject = request.data["subject"]
         comment.created_on = request.data["created_on"]
-        post = Posts.objects.get(pk=request.data["postId"])
+        post = Posts.objects.get(pk=request.data["post_id"])
         comment.post = post
         comment.author = author 
 
@@ -127,5 +136,5 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentsModel
         fields = ('id', 'post', 'author', 'content',
-                'subject', 'created_on')
+                'subject', 'created_on', 'IsAuthor')
         depth = 1

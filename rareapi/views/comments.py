@@ -1,3 +1,4 @@
+from django import utils
 from rareapi.models.RareUser import RareUser
 from rareapi.models.posts import Posts
 from rareapi.models import comments
@@ -22,7 +23,7 @@ class Comments(ViewSet):
             comment.content = request.data["content"]
             comment.subject = request.data["subject"]
             comment.created_on = request.data["created_on"]
-            post = Posts.objects.get(pk=request.data["postId"])
+            post = Posts.objects.get(pk=request.data["post_id"])
             comment.post = post
             comment.author = author
         except KeyError as ex:
@@ -96,12 +97,12 @@ class Comments(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    """JSON serializer for comment creator"""
+# class CommentSerializer(serializers.ModelSerializer):
+#     """JSON serializer for comment creator"""
 
-    class Meta:
-        model = CommentsModel
-        fields = ('id',)
+#     class Meta:
+#         model = CommentsModel
+#         fields = ('id',)
 
 class CommentPostSerializer(serializers.ModelSerializer):
     """JSON serializer for comment creator"""

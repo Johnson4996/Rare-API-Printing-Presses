@@ -142,6 +142,15 @@ class Post(ViewSet):
         # if category is not None:
         #     post = post.filter(category_id=category)
 
+        for p in post:
+            p.IsAuthor = None
+
+            try:
+                RareUser.objects.get(user=request.auth.user, pk=p.rare_user.id)
+                p.IsAuthor = True
+            except RareUser.DoesNotExist:
+                p.IsAuthor = False
+
         serializer = PostSerializer(
             post, many=True, context={'request': request})
         return Response(serializer.data)
@@ -171,7 +180,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Posts
-        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved')
+        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor')
         depth = 1
 
     

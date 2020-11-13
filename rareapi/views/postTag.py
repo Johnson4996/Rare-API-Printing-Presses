@@ -55,7 +55,7 @@ class PostTags(ViewSet):
             #
             # The `2` at the end of the route becomes `pk`
             postTag = PostTag.objects.get(pk=pk)
-            serializer = postTagSerializer(tag, context={'request': request})
+            serializer = postTagSerializer(postTag, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)

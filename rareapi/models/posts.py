@@ -11,3 +11,11 @@ class Posts(models.Model):
     image_url = models.CharField(max_length=100)
     content = models.CharField(max_length=200)
     approved = models.BooleanField()
+
+    @property
+    def IsAuthor(self):
+        return self.__IsAuthor
+
+    @IsAuthor.setter
+    def IsAuthor(self, value):
+        self.__IsAuthor = value

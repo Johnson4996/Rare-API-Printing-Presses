@@ -88,7 +88,7 @@ class Post(ViewSet):
         # Do mostly the same thing as POST, but instead of 
         # creating a new instance of Post, get the post record
         # from the database whose primary key is `pk`
-        post = Posts()
+        post = Posts.objects.get(pk=pk)
         post.title = request.data['title']
         post.publication_date = request.data['date']
         post.image_url = request.data['image_url']
@@ -130,11 +130,11 @@ class Post(ViewSet):
             Response -- JSON serialized list of posts
         """
         # Get all post records from the database
-        post = Posts.objects.all()
+        post = Posts.objects.all()#.order_by('-publication_date')
 
         user_id = self.request.query_params.get('user_id', None)
         if user_id is not None:
-            posts = post.filter(user_id=user_id)
+            post = post.filter(user_id=user_id)
         # Support filtering posts by category
         # http://localhost:8000/posts?type=1
         # That URL will retrieve all Music Posts

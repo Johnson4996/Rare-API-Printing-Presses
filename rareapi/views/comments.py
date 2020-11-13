@@ -9,6 +9,8 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rareapi.models import Comments as CommentsModel
+from django.contrib.auth.models import User
+
 
 class Comments(ViewSet):
     """Rare Post Comments"""
@@ -120,12 +122,22 @@ class CommentPostSerializer(serializers.ModelSerializer):
         model = Posts
         fields = ('id', )
 
+class CommentUserSerializer(serializers.ModelSerializer):
+    """JSON serializer for comment creator"""
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
 class CommentAuthorSerializer(serializers.ModelSerializer):
     """JSON serializer for comment creator"""
+
+    user = CommentUserSerializer(many=False)
 
     class Meta:
         model = RareUser
         fields = ('id', 'user')
+
 
 
 class CommentSerializer(serializers.ModelSerializer):

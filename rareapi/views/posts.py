@@ -130,7 +130,7 @@ class Post(ViewSet):
             Response -- JSON serialized list of posts
         """
         # Get all post records from the database
-        post = Posts.objects.all()
+        post = Posts.objects.all()#.order_by('-publication_date')
 
         user_id = self.request.query_params.get('user_id', None)
         if user_id is not None:

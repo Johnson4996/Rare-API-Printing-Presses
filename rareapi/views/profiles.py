@@ -15,7 +15,7 @@ class Profile(ViewSet):
     def list(self, request):
             """Handle get requests for profiles """
 
-            profiles = RareUser.objects.all()   
+            profiles = RareUser.objects.all().order_by('user')  
 
             serializer = ProfileSerializer(profiles, many=True, context={'request': request})
             return Response(serializer.data)

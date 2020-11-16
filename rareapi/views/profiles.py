@@ -16,6 +16,15 @@ class Profile(ViewSet):
             """Handle get requests for profiles """
 
             profiles = RareUser.objects.all()
+
+            for user in profiles:
+                user.IsAdmin = None
+
+                try:
+                    RareUser.objects.get(user=request.auth.user, pk=user.user_id)
+                    user.IsAdmin = "Admin"
+                except RareUser.DoesNotExist:
+                    user.IsAdmin = "Author"
             
 
             serializer = ProfileSerializer(profiles, many=True, context={'request': request})
@@ -34,5 +43,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = RareUser
         fields = ('id', 'bio', 'profile_image_url', 'created_on',
-                'active', 'user' )
+                'active', 'user', 'IsAdmin' )
         depth = 1

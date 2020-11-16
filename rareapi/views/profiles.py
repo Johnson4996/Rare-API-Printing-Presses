@@ -30,6 +30,18 @@ class Profile(ViewSet):
             serializer = ProfileSerializer(profiles, many=True, context={'request': request})
             return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single profile
+        Returns:
+            Response -- JSON serialized profile instance
+        """
+        try:
+            SingleProfile = RareUser.objects.get(pk=pk)
+            serializer = ProfileSerializer(SingleProfile, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
 class ProfileUserSerializer(serializers.ModelSerializer):
 
     class Meta:

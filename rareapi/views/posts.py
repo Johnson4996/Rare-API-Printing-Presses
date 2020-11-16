@@ -1,4 +1,7 @@
 """View module for handling requests about posts"""
+from rareapi.views.reactions import ReactionSerializer
+from rareapi.models.reaction import Reaction
+from rareapi.models.postReactions import PostReactions
 from django.core.exceptions import ValidationError
 from django.http import request
 from rest_framework import status
@@ -71,6 +74,7 @@ class Post(ViewSet):
             # The `2` at the end of the route becomes `pk`
 
             post = Posts.objects.get(pk=pk)
+            post.reactions = Reaction.objects.filter(postreactions__post = post)
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
@@ -177,10 +181,11 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         serializer type
     """
     rare_user = PostUserSerializer(many=False)
+    reactions = ReactionSerializer(many=True)
     
     class Meta:
         model = Posts
-        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor')
+        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor', 'reactions')
         depth = 1
 
     

@@ -19,3 +19,11 @@ class Posts(models.Model):
     @IsAuthor.setter
     def IsAuthor(self, value):
         self.__IsAuthor = value
+
+    @property
+    def reactions(self):
+        return self.__reactions
+    
+    @reactions.setter
+    def reactions(self, value):
+        self.__reactions = value

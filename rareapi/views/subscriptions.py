@@ -26,3 +26,19 @@ class Subs(ViewSet):
 
         if user_id is not None:
             subscription = subscription.filter(user_id=user_id)
+
+        serializer = SubSerializer(
+            subscription, many=True, context={'request': request})
+        return Response(serializer.data)
+
+class SubSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for subscriptions
+
+    Arguments:
+        serializer type
+    """
+    
+    class Meta:
+        model = Subscriptions
+        fields =('id', 'created_on', 'ended_on', 'follower', 'author')
+        depth = 1

@@ -28,7 +28,7 @@ router.register(r'posttags', PostTags, 'postTags')
 router.register(r'tags', Tags, 'tag')
 router.register(r'comments', Comments, 'comments')
 router.register(r'profile', Profile, 'profile')
-router.register(r'subscriptions', Subs, 'subscriptions')
+router.register(r'subscriptions', Subs, 'subscription')
 
 
 

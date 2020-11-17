@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from rareapi.views.deactivate import deactivate
+from rareapi.views.makeadmin import MakeAdmin
 from rareapi.views.profiles import Profile
 from django.conf.urls import include
 from django.urls import path
@@ -29,7 +31,8 @@ router.register(r'tags', Tags, 'tag')
 router.register(r'comments', Comments, 'comments')
 router.register(r'profile', Profile, 'profile')
 router.register(r'subscriptions', Subs, 'subscription')
-
+router.register(r'deactivate', deactivate, 'activatedProfile')
+router.register(r'makeadmin', MakeAdmin, 'activatedProfile')
 
 
 urlpatterns = [

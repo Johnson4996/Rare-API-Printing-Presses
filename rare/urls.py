@@ -19,7 +19,7 @@ from django.conf.urls import include
 from django.urls import path
 from rareapi.views import register_user, login_user, Tags
 from rest_framework import routers
-from rareapi.views import Categories, Post, PostTags, Comments, Subscriptions
+from rareapi.views import Categories, Post, PostTags, Comments, Subs
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'categories', Categories, 'category')
@@ -28,7 +28,7 @@ router.register(r'posttags', PostTags, 'postTags')
 router.register(r'tags', Tags, 'tag')
 router.register(r'comments', Comments, 'comments')
 router.register(r'profile', Profile, 'profile')
-router.register(r'subscriptions', Subscriptions, 'subscriptions')
+router.register(r'subscriptions', Subs, 'subscriptions')
 
 
 

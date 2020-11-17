@@ -10,7 +10,7 @@ from rest_framework import status
 from rareapi.models import RareUser, Subscriptions
 from django.contrib.auth.models import User
 
-class Subscription(ViewSet):
+class Subs(ViewSet):
     """Rare Subscriptions"""
 
     def list(self, request):

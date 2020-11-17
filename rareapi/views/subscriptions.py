@@ -9,6 +9,7 @@ from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import RareUser, Subscriptions
 from django.contrib.auth.models import User
+from rareapi.views.posts import UserSerializer
 
 class Subs(ViewSet):
     """Rare Subscriptions"""
@@ -31,6 +32,15 @@ class Subs(ViewSet):
             subscription, many=True, context={'request': request})
         return Response(serializer.data)
 
+class SubsUserSeralizer(serializers.ModelSerializer):
+    """JSON serializer for subscriptions"""
+
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = RareUser
+        fields = ('user', )
+
 class SubSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for subscriptions
 
@@ -38,7 +48,9 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
         serializer type
     """
     
+    author = SubsUserSeralizer(many=False)
+
     class Meta:
         model = Subscriptions
-        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id')
+        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author')
         depth = 1

@@ -10,14 +10,8 @@ from rareapi.models import RareUser
 from django.contrib.auth.models import User
 
 
-class Profile(ViewSet):
+class RareProfile(ViewSet):
     
-    def list(self, request):
-            """Handle get requests for profiles """
-
-            profiles = RareUser.objects.all().order_by('user')
-            serializer = ProfileSerializer(profiles, many=True, context={'request': request})
-            return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single post
@@ -27,21 +21,21 @@ class Profile(ViewSet):
         """
         
         try:
-            user = User.objects.get(pk=pk)
-            serializer = ProfileUserSerializer(user, context={'request': request})
+            user = RareUser.objects.get(pk=pk)
+            serializer = RareProfileSerializer(user, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-class ProfileUserSerializer(serializers.ModelSerializer):
+class RareProfileUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'is_staff')
 
-class ProfileSerializer(serializers.ModelSerializer):
+class RareProfileSerializer(serializers.ModelSerializer):
 
-    user = ProfileUserSerializer(many=False)
+    user = RareProfileUserSerializer(many=False)
 
     class Meta:
         model = RareUser

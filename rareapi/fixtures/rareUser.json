@@ -1,13 +1,13 @@
 [
     {
         "model": "rareapi.RareUser",
-        "pk": 1,
+        "pk": 2,
         "fields": {
-            "bio": "MUSIC IS BOMB",
+            "bio": "MUSIC SUCKS",
             "profile_image_url": "",
             "created_on": "2020-07-07",
             "active": true,
-            "user": 1
+            "user": 2
         }
     }
 ]

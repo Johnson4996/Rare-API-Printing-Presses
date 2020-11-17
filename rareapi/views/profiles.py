@@ -19,6 +19,25 @@ class Profile(ViewSet):
             serializer = ProfileSerializer(profiles, many=True, context={'request': request})
             return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single post
+
+        Returns:
+            Response -- JSON serialized game instance
+        """
+        try:
+            # pk is a parameter to this function, and 
+            # Django parses it from the URL rouote parameter
+            # http://localhost:8000/posts/2
+            #
+            # The `2` at the end of the route becomes `pk`
+
+            user = User.objects.get(pk=pk)
+            serializer = ProfileUserSerializer(user, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
 class ProfileUserSerializer(serializers.ModelSerializer):
 
     class Meta:

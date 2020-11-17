@@ -6,3 +6,4 @@ from .subscriptions import Subscriptions
 from .tag import Tags
 from .posts import Post
 from .postTag import PostTags
+from .profiles import Profile

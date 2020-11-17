@@ -33,6 +33,32 @@ class Profile(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    def update(self, request, pk=None):
+        """Handle PUT requests for a Post
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+
+        rareUser = RareUser.objects.get(user=request.auth.user)
+
+        # Do mostly the same thing as POST, but instead of 
+        # creating a new instance of Post, get the post record
+        # from the database whose primary key is `pk`
+        user = RareUser.objects.get(pk=pk)
+
+        # user.active = request.data['active']
+        # if user.active == False:
+        #     user.active = True
+        # else: 
+        #     user.active = False
+        user.save()
+
+        # 204 status code means everything worked by the
+        # server is not sending back any data in the response
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 class ProfileUserSerializer(serializers.ModelSerializer):
 
     class Meta:

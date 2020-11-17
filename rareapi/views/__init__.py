@@ -6,3 +6,4 @@ from .posts import Post
 from .tag import Tags
 from .postTag import PostTags
 from .reactions import Reactions
+from .postReaction import PostReaction

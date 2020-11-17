@@ -75,7 +75,7 @@ class Post(ViewSet):
 
             post = Posts.objects.get(pk=pk)
             post.reactions = Reaction.objects.filter(postreactions__post = post)
-            serializer = PostSerializer(post, context={'request': request})
+            serializer = PostDeatilSerializer(post, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -160,13 +160,13 @@ class Post(ViewSet):
         return Response(serializer.data)
 
 class UserSerializer(serializers.ModelSerializer):
-    """JSON serializer for gamer's related Django user"""
+    """JSON serializer for users"""
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
 
 class PostUserSerializer(serializers.ModelSerializer):
-    """JSON serializer for gamers"""
+    """JSON serializer for User Posts"""
 
     user = UserSerializer(many=False)
 
@@ -175,7 +175,20 @@ class PostUserSerializer(serializers.ModelSerializer):
         fields = ('user', )
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for games
+    """JSON serializer for posts
+
+    Arguments:
+        serializer type
+    """
+    rare_user = PostUserSerializer(many=False)
+    
+    class Meta:
+        model = Posts
+        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor')
+        depth = 1
+
+class PostDeatilSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for posts
 
     Arguments:
         serializer type

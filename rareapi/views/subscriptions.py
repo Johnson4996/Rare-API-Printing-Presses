@@ -40,5 +40,5 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Subscriptions
-        fields =('id', 'created_on', 'ended_on', 'follower', 'author')
+        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id')
         depth = 1

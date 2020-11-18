@@ -23,7 +23,11 @@ from django.conf.urls import include
 from django.urls import path
 from rareapi.views import register_user, login_user, Tags
 from rest_framework import routers
-from rareapi.views import Categories, Post, PostTags, Comments, Reactions,Subs
+from rareapi.views import Categories, Post, PostTags, Comments, Reactions, Subs
+from rareapi.views.rareprofiles import RareProfile
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'categories', Categories, 'category')
@@ -34,6 +38,7 @@ router.register(r'comments', Comments, 'comments')
 router.register(r'reactions', Reactions, 'reactions')
 router.register(r'postreactions', PostReaction, 'postreactions')
 router.register(r'profile', Profile, 'profile')
+router.register(r'rareprofile', RareProfile, 'rareprofile')
 router.register(r'subscriptions', Subs, 'subscription')
 router.register(r'deactivate', deactivate, 'activatedProfile')
 router.register(r'makeadmin', MakeAdmin, 'activatedProfile')
@@ -45,4 +50,4 @@ urlpatterns = [
     path('register', register_user),
     path('login', login_user),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

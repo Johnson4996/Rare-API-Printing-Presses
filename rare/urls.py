@@ -15,11 +15,14 @@ Including another URLconf
 """
 
 from rareapi.views.postReaction import PostReaction
+from rareapi.views.deactivate import deactivate
+from rareapi.views.makeadmin import MakeAdmin
+from rareapi.views.profiles import Profile
 from django.conf.urls import include
 from django.urls import path
 from rareapi.views import register_user, login_user, Tags
 from rest_framework import routers
-from rareapi.views import Categories, Post, PostTags, Comments, Reactions
+from rareapi.views import Categories, Post, PostTags, Comments, Reactions,Subs
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'categories', Categories, 'category')
@@ -29,6 +32,10 @@ router.register(r'tags', Tags, 'tag')
 router.register(r'comments', Comments, 'comments')
 router.register(r'reactions', Reactions, 'reactions')
 router.register(r'postreactions', PostReaction, 'postreactions')
+router.register(r'profile', Profile, 'profile')
+router.register(r'subscriptions', Subs, 'subscription')
+router.register(r'deactivate', deactivate, 'activatedProfile')
+router.register(r'makeadmin', MakeAdmin, 'activatedProfile')
 
 
 urlpatterns = [

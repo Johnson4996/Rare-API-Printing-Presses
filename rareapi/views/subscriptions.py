@@ -33,6 +33,29 @@ class Subs(ViewSet):
             subscription, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def create(self, request):
+        """Handle POST operations
+        will be used when user is on uathor profile and hits subscribe
+        only info need in the request is the author ID"""
+
+        follower = RareUser.objects.get(user=request.auth.user)
+        author = RareUser.objects.get(pk=request.data["author_id"])
+
+        subs = Subscriptions()
+        subs.follower = follower
+        subs.author = author
+
+        if follower != author:
+            try:
+                subs.save()
+                seralizer = SubSerializer(subs, context={'request': request})
+                return Response(seralizer.data)
+            except ValidationError as ex:
+                return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
+            else:
+                return Response({"reason": "You cannot subscribe to your own posts"}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(methods=['get', 'post', 'delete'], detail=True)
     def follow(self, request, pk=None):
         """Managing followers subscribing to authors"""

@@ -8,3 +8,5 @@ from .RareUser import RareUser
 from .reaction import Reaction
 from .subscriptions import Subscriptions
 from .tags import Tag
+from .reaction import Reaction
+from .postReactions import PostReactions

@@ -10,6 +10,7 @@ from rest_framework import status
 from rareapi.models import RareUser, Subscriptions
 from django.contrib.auth.models import User
 from rareapi.views.posts import UserSerializer
+from rest_framework.decorators import action
 
 class Subs(ViewSet):
     """Rare Subscriptions"""

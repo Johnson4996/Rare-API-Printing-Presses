@@ -5,7 +5,16 @@
         "fields": {
             "rare_user": 1,
             "reaction_id": 1,
-            "post_id": 1
+            "post_id": 2
+        }
+    },
+    {
+        "model": "rareapi.PostReactions",
+        "pk": 2,
+        "fields": {
+            "rare_user": 1,
+            "reaction_id": 2,
+            "post_id": 2
         }
     }
 ]

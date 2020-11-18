@@ -3,8 +3,32 @@
         "model": "rareapi.Reaction",
         "pk": 1,
         "fields": {
-            "label": "musico",
-            "image_url": ""
+            "label": "Love",
+            "image_url": "https://img.icons8.com/material-outlined/24/000000/filled-like.png"
+        }
+    },
+    {
+        "model": "rareapi.Reaction",
+        "pk": 2,
+        "fields": {
+            "label": "Like",
+            "image_url": "https://img.icons8.com/material-outlined/24/000000/facebook-like.png"
+        }
+    },
+    {
+        "model": "rareapi.Reaction",
+        "pk": 3,
+        "fields": {
+            "label": "Angry",
+            "image_url": "https://img.icons8.com/metro/26/000000/angry.png"
+        }
+    },
+    {
+        "model": "rareapi.Reaction",
+        "pk": 4,
+        "fields": {
+            "label": "Congrats",
+            "image_url": "//img.icons8.com/android/24/000000/handshake.png"
         }
     }
 ]

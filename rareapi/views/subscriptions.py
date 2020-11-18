@@ -54,3 +54,34 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
         model = Subscriptions
         fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author')
         depth = 1
+
+
+@action(methods=['get', 'post', 'delete'], detail=True)
+def follow(self, request, pk=None):
+    """Managing followers subscribing to authors"""
+
+    # A user wants to subscribe to an author
+    if request.method == "POST":
+        subs = Subscriptions.object.get(pk=pk)
+
+        # Django uses the `Authorization` header to determine
+        # which user is making the request to subscribe
+
+        author = RareUser.objects.get(user=request.auth.user)
+
+        try:
+            #Determine if the user is already following
+            subscribe = Subscriptions.objects.get(
+                follower_id=user_id)
+            return Response(
+                {'message': 'You are already subscribed to this Author'},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY
+            )
+        except Subscriptions.DoesNotExist:
+            # The user is not signed up
+            subscribe = Subscriptions()
+            subscribe.subs = subs
+            subscribe.author = author
+            subscribe.save()
+
+            return Response({}, status=status.HTTP_201_CREATED)

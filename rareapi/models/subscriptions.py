@@ -7,3 +7,11 @@ class Subscriptions(models.Model):
     ended_on = models.DateTimeField(null=True)
     follower = models.ForeignKey("RareUser", on_delete=models.CASCADE, related_name="rare_user_follower")
     author = models.ForeignKey("RareUser", on_delete=models.CASCADE, related_name="rare_user_author")
+
+    @property
+    def subscribed(self):
+        return self.__subscribed
+
+    @subscribed.setter
+    def subscribed(self, value):
+        self.__subscribed = value

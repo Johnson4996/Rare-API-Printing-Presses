@@ -104,7 +104,7 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
         url = serializers.HyperlinkedIdentityField(
             view_name='subscriptions', # this might be wrong
             lookup_field='id')
-        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author')
+        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author', 'subscribed')
         depth = 1
 
     

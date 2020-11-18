@@ -72,7 +72,7 @@ def follow(self, request, pk=None):
         try:
             #Determine if the user is already following
             subscribe = Subscriptions.objects.get(
-                follower_id=user_id)
+                follower_id=user_id) #will need help with this
             return Response(
                 {'message': 'You are already subscribed to this Author'},
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -85,3 +85,33 @@ def follow(self, request, pk=None):
             subscribe.save()
 
             return Response({}, status=status.HTTP_201_CREATED)
+
+    # User wants to Unsubscribe
+    elif request.method == "DELETE":
+        # handle the case if the client wants to 
+        # unfollow
+        try:
+            subs = Subscriptions.objects.get(pk=pk)
+        except Subscriptions.DoesNotExist:
+            return Response(
+                {'message': 'You do not follow this author'},
+                status=status.HTTP_400_BAD_REQUEST)
+
+        # Get the authenticated user
+        follower = RareUser.objects.get(user=request.auth.user)
+
+        try:
+            # try to unsubscribe
+            subs = Subscriptions.objects.get(
+                follower_id=user_id) # will need help with this
+            subs.delete()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+        except Subscriptions.DoesNotExist:
+            return Response(
+                {'message': 'Not currently subscribed to author'},
+                status=status.HTTP_404_NOT_FOUND)
+
+    # If the client performs a request with a method that isnt
+    # POST or DELETE, tell the client the method is not supported
+    return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

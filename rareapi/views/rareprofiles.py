@@ -8,6 +8,10 @@ from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import RareUser
 from django.contrib.auth.models import User
+import uuid
+import base64
+from django.core.files.base import ContentFile
+
 
 
 class RareProfile(ViewSet):
@@ -26,6 +30,29 @@ class RareProfile(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+    
+    def update(self, request, pk=None):
+        """Handle Put operations
+
+        Returns:
+            Response -- JSON serialized post instance
+        """
+
+        rareuser = RareUser.objects.get(user=request.auth.user)
+
+        format, imgstr = request.data['profile_image_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["profile_id"]}-{uuid.uuid4()}.{ext}')
+        rareuser.profile_image_url = data
+
+        try:
+            rareuser.save()
+            serializer = RareProfileSerializer (rareuser, context={'request': request})
+            return Response(serializer.data)
+
+        except ValidationError as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RareProfileUserSerializer(serializers.ModelSerializer):
 

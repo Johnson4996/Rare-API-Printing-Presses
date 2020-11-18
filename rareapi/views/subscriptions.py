@@ -11,6 +11,7 @@ from rareapi.models import RareUser, Subscriptions
 from django.contrib.auth.models import User
 from rareapi.views.posts import UserSerializer
 from rest_framework.decorators import action
+import datetime
 
 class Subs(ViewSet):
     """Rare Subscriptions"""
@@ -53,68 +54,31 @@ class Subs(ViewSet):
             except ValidationError as ex:
                 return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-            else:
-                return Response({"reason": "You cannot subscribe to your own posts"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"reason": "You cannot subscribe to your own posts"}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['get', 'post', 'delete'], detail=True)
-    def follow(self, request, pk=None):
-        """Managing followers subscribing to authors"""
+    @action(methods=['get'], detail=False)
+    # Gets only active subscriptions (those without an ended_on) for current user
+    def get_currents_subs(self, request):
+        subs = Subscriptions.objects.add()
+        follower = RareUser.objects.get(user=request.auth.user)
 
-        # A user wants to subscribe to an author
-        if request.method == "POST":
-            subs = Subscriptions.object.get(pk=pk)
+        if follower is not None:
+            subs = subs.filter(follower_id=follower, ended_on__isNull=True)
 
-        # Django uses the `Authorization` header to determine
-        # which user is making the request to subscribe
+        serializer = SubSerializer(
+            subs, many=True, context={'request': request})
+        return Response(serializer.data)
 
-            author = RareUser.objects.get(user=request.auth.user)
+    @action(methods=['patch'], detail=True)
+    # adds an ended_on for an active subscription between a follower and author
+    def unsubscribe(self, request, pk=None):
+        sub_obj = Subscriptions.objects.get(pk=pk)
 
-            try:
-        #Determine if the user is already following
-                subscribe = Subscriptions.objects.get(
-                    follower_id=user_id) #will need help with this
-                return Response(
-                    {'message': 'You are already subscribed to this Author'},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        sub_obj.ended_on = datetime.datetime.now()
+        sub_obj.save()
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-            except Subscriptions.DoesNotExist:
-            # The user is not signed up
-                subscribe = Subscriptions()
-                subscribe.subs = subs
-                subscribe.author = author
-                subscribe.save()
-
-                return Response({}, status=status.HTTP_201_CREATED)
-
-        # User wants to Unsubscribe
-        elif request.method == "DELETE":
-            # handle the case if the client wants to 
-            # unfollow
-            try:
-                subs = Subscriptions.objects.get(pk=pk)
-            except Subscriptions.DoesNotExist:
-                return Response(
-                    {'message': 'You do not follow this author'},
-                    status=status.HTTP_400_BAD_REQUEST)
-
-        # Get the authenticated user
-            follower = RareUser.objects.get(user=request.auth.user)
-
-            try:
-                # try to unsubscribe
-                subs = Subscriptions.objects.get(
-                    follower_id=user_id) # will need help with this
-                subs.delete()
-                return Response(None, status=status.HTTP_204_NO_CONTENT)
-
-            except Subscriptions.DoesNotExist:
-                return Response(
-                    {'message': 'Not currently subscribed to author'},
-                    status=status.HTTP_404_NOT_FOUND)
-
-    # If the client performs a request with a method that isnt
-    # POST or DELETE, tell the client the method is not supported
-        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class SubsUserSeralizer(serializers.ModelSerializer):
     """JSON serializer for subscriptions"""
@@ -133,9 +97,13 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
     """
     
     author = SubsUserSeralizer(many=False)
+    follower = SubsUserSeralizer(many=False)
 
     class Meta:
         model = Subscriptions
+        url = serializers.HyperlinkedIdentityField(
+            view_name='subscriptions', # this might be wrong
+            lookup_field='id')
         fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author')
         depth = 1
 

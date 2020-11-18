@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from rareapi.views.postApproval import ApprovePost
 from rareapi.views.deactivate import deactivate
 from rareapi.views.makeadmin import MakeAdmin
 from rareapi.views.profiles import Profile
@@ -33,6 +34,7 @@ router.register(r'profile', Profile, 'profile')
 router.register(r'subscriptions', Subs, 'subscription')
 router.register(r'deactivate', deactivate, 'activatedProfile')
 router.register(r'makeadmin', MakeAdmin, 'activatedProfile')
+router.register(r'approvepost', ApprovePost, 'approvePost')
 
 
 urlpatterns = [

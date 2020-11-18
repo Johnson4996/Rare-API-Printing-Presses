@@ -159,7 +159,7 @@ class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'is_staff')
 
 class PostUserSerializer(serializers.ModelSerializer):
     """JSON serializer for gamers"""

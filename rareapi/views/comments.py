@@ -127,7 +127,7 @@ class CommentUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'is_staff')
 
 class CommentAuthorSerializer(serializers.ModelSerializer):
     """JSON serializer for comment creator"""

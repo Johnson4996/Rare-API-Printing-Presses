@@ -12,6 +12,9 @@ from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Category, Posts, RareUser
 from django.contrib.auth.models import User
+import uuid
+import base64
+from django.core.files.base import ContentFile
 
 class Post(ViewSet):
     """Rare Posts"""
@@ -37,6 +40,11 @@ class Post(ViewSet):
         post.content = request.data['content']
         post.approved = request.data['approved'] # will need help getting this right
         post.rare_user = rareUser
+
+        format, imgstr = request.data['image_url'].split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["title"]}-{uuid.uuid4()}.{ext}')
+        post.image_url = data
 
         # Use the Django ORM to get the record from the database
         # whose `id` is what the client passed as the

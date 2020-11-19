@@ -33,17 +33,19 @@ class Subs(ViewSet):
             try:
                 Subscriptions.objects.get()
 
-        for s in subscription:
-            s.subscribed = None
+            except:
+                pass
 
-            if s.follower_id == request.auth.user.id:
-                s.subscribed = True
+        for subs in subscription:
+            subs.subscribed = None
+
+            if subs.follower_id == request.auth.user.id:
+                subs.subscribed = True
 
             else:
-                s.subscribed = False
+                subs.subscribed = False
 
-        serializer = SubSerializer(
-            subscription, many=True, context={'request': request})
+        serializer = SubSerializer(subscription, many=True, context={'request': request})
         return Response(serializer.data)
 
         
@@ -117,7 +119,7 @@ class SubSerializer(serializers.HyperlinkedModelSerializer):
         url = serializers.HyperlinkedIdentityField(
             view_name='subscriptions', # this might be wrong
             lookup_field='id')
-        fields =('id', 'created_on', 'ended_on', 'follower_id', 'author_id', 'author', 'subscribed')
+        fields =('id', 'created_on', 'ended_on', 'follower_id', 'follower','author_id', 'author', 'subscribed')
         depth = 1
 
     

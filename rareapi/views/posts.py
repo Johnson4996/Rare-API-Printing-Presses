@@ -1,4 +1,7 @@
 """View module for handling requests about posts"""
+from rareapi.views.reactions import ReactionSerializer
+from rareapi.models.reaction import Reaction
+from rareapi.models.postReactions import PostReactions
 from django.core.exceptions import ValidationError
 from django.http import request
 from rest_framework import status
@@ -71,7 +74,8 @@ class Post(ViewSet):
             # The `2` at the end of the route becomes `pk`
 
             post = Posts.objects.get(pk=pk)
-            serializer = PostSerializer(post, context={'request': request})
+            post.reactions = Reaction.objects.filter(postreactions__post = post)
+            serializer = PostDeatilSerializer(post, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -156,13 +160,13 @@ class Post(ViewSet):
         return Response(serializer.data)
 
 class UserSerializer(serializers.ModelSerializer):
-    """JSON serializer for gamer's related Django user"""
+    """JSON serializer for users"""
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'is_staff')
 
 class PostUserSerializer(serializers.ModelSerializer):
-    """JSON serializer for gamers"""
+    """JSON serializer for User Posts"""
 
     user = UserSerializer(many=False)
 
@@ -171,7 +175,7 @@ class PostUserSerializer(serializers.ModelSerializer):
         fields = ('user', )
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
-    """JSON serializer for games
+    """JSON serializer for posts
 
     Arguments:
         serializer type
@@ -181,6 +185,20 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Posts
         fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor')
+        depth = 1
+
+class PostDeatilSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for posts
+
+    Arguments:
+        serializer type
+    """
+    rare_user = PostUserSerializer(many=False)
+    reactions = ReactionSerializer(many=True)
+    
+    class Meta:
+        model = Posts
+        fields =('id', 'category', 'title', 'rare_user', 'publication_date', 'image_url', 'content', 'approved', 'IsAuthor', 'reactions')
         depth = 1
 
     

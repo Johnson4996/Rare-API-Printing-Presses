@@ -25,13 +25,8 @@ class Profile(ViewSet):
         Returns:
             Response -- JSON serialized game instance
         """
+        
         try:
-            # pk is a parameter to this function, and 
-            # Django parses it from the URL rouote parameter
-            # http://localhost:8000/posts/2
-            #
-            # The `2` at the end of the route becomes `pk`
-
             user = User.objects.get(pk=pk)
             serializer = ProfileUserSerializer(user, context={'request': request})
             return Response(serializer.data)

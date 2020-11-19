@@ -30,10 +30,23 @@ class Subs(ViewSet):
         if user_id is not None:
             subscription = subscription.filter(user_id=user_id)
 
+            try:
+                Subscriptions.objects.get()
+
+        for s in subscription:
+            s.subscribed = None
+
+            if s.follower_id == request.auth.user.id:
+                s.subscribed = True
+
+            else:
+                s.subscribed = False
+
         serializer = SubSerializer(
             subscription, many=True, context={'request': request})
         return Response(serializer.data)
 
+        
     def create(self, request):
         """Handle POST operations
         will be used when user is on uathor profile and hits subscribe

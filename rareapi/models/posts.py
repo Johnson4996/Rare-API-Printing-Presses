@@ -8,7 +8,7 @@ class Posts(models.Model):
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
     title = models.CharField(max_length=75)
     publication_date = models.DateField(auto_now=False, auto_now_add=False)
-    image_url = models.CharField(max_length=100)
+    image_url = models.ImageField(upload_to='profile_image_url', height_field=None, max_length=None, width_field=None, null=True)
     content = models.CharField(max_length=200)
     approved = models.BooleanField()
 
